@@ -1,0 +1,560 @@
+# Machine Learning TP
+
+## Utilisation
+
+### installation
+```bash
+# create virtual environment
+python -m venv venv
+# activate virtual environment
+source venv/bin/activate
+# install requirements
+pip install -r requirements.txt
+```
+
+### run tp[x].py file
+```bash
+python tp[x].py
+```
+
+## TP1 - EXPLORATION ET PRÉPARATION DES DONNÉES
+
+### description
+Ce TP se concentre sur la détection de spam d'emails en utilisant des techniques de machine learning pour la classification de texte. Le script implémente un système complet de classification qui prédit si un email est du spam ou non (ham).
+
+**Objectif :** Classifier automatiquement les emails en spam (1) ou ham (0) en analysant leur contenu textuel.
+
+**Processus :**
+1. **Préparation des données** : Preprocessing du texte (normalisation des espaces, gestion des caractères spéciaux)
+2. **Vectorisation** : Transformation du texte en vecteurs numériques avec TF-IDF (Term Frequency-Inverse Document Frequency)
+3. **Entraînement de modèles** : Utilisation de plusieurs algorithmes de classification :
+   - Multinomial Naive Bayes (optimisé avec GridSearchCV)
+   - Logistic Regression
+   - Support Vector Machine (SVM)
+   - Voting Classifier (ensemble des modèles)
+4. **Optimisation** : Recherche des meilleurs hyperparamètres pour chaque modèle
+5. **Évaluation** : Test des modèles sur de nouveaux emails avec analyse des erreurs (faux positifs/négatifs)
+
+**Bibliothèques utilisées :**
+- pandas : manipulation des données
+- numpy : calculs numériques
+- scikit-learn : modèles de machine learning, vectorisation TF-IDF, optimisation
+- re : expressions régulières pour le preprocessing
+
+**Fichiers de données :**
+- `data.py` : Dataset d'entraînement (emails étiquetés spam/ham)
+- `new_mail.py` : Nouveaux emails pour tester les modèles
+
+
+### run tp1.py file
+```bash
+python tp1.py
+```
+
+## TP2 - ANALYSE DES DONNÉES
+
+### description
+Ce TP se concentre sur l'analyse exploratoire des données en utilisant le dataset Iris inclus dans Scikit-learn. Le script charge le dataset, le transforme en DataFrame pandas et affiche des informations de base sur la structure des données.
+
+**Dataset utilisé :** Iris (150 échantillons, 4 caractéristiques)
+- Sepal length (cm)
+- Sepal width (cm)
+- Petal length (cm)
+- Petal width (cm)
+- Target (classe de l'iris)
+
+**Bibliothèques utilisées :**
+- pandas : manipulation des données
+- numpy : calculs numériques
+- seaborn : visualisations statistiques
+- matplotlib : graphiques
+- plotly : visualisations interactives
+- scikit-learn : chargement du dataset et preprocessing
+
+### run tp2.py file
+```bash
+# Exécuter le script
+python tp2.py
+```
+
+## TP3 - regression linéaire
+
+### Exercice 1 - Chargement et exploration du dataset
+
+1. Charger le dataset Diabetes depuis Scikit-learn.
+2. Afficher :
+Le nombre d'observations (patients)
+Le nombre de variables explicatives
+1. Afficher :
+Les noms des variables explicatives
+La variable cible
+
+**Question 1 : Décrire la nature de la variable cible (continue ou discrète).**
+
+La variable cible est **continue** (quantitative). Elle peut prendre n'importe quelle valeur numérique réelle dans une plage continue (214 valeurs différentes parmi 442 observations, type float64).
+
+**Question 2 : Expliquer pourquoi ce problème est un problème de régression et non de classification.**
+
+C'est un problème de **régression** car :
+- La variable cible est **continue**
+- On cherche à prédire une **valeur quantitative** plutôt qu'une catégorie
+
+Dans ce dataset, on veut prédire la valeur exacte de la mesure de progression du diabète, pas classer les patients dans des catégories prédéfinies.
+
+> [!NOTE]
+> - **Classification** : prédire une classe discrète (ex: Oui/Non, Type 1/Type 2)
+> - **Régression** : prédire une valeur numérique continue (ex: 25.0, 150.5, 200.3)
+
+```bash
+python exo1.py
+```
+
+### Exercice 2 - Préparation des données
+
+1. Séparer le dataset en :
+• X: variables explicatives
+• y : variable cible
+2. Diviser les données en :
+• Ensemble d'entraînement
+• Ensemble de test
+3. Choisir un pourcentage pour l'ensemble de test (ex. 20 % ou 30 %).
+4. Justifier ce choix :
+• Pourquoi ne pas utiliser toutes les données pour l'entraînement ?
+• Quel est le rôle de l'ensemble de test ?
+
+**Question 1 : Pourquoi ne pas utiliser toutes les données pour l'entraînement ?**
+
+Si on utilise toutes les données pour l'entraînement, on ne peut pas évaluer la capacité du modèle à généraliser sur de nouvelles données. Le modèle pourrait mémoriser les données d'entraînement (surapprentissage) sans être capable de faire des prédictions correctes sur des données jamais vues. L'ensemble de test permet de vérifier que le modèle fonctionne bien sur des données inconnues, ce qui est l'objectif réel d'un modèle de machine learning.
+
+**Question 2 : Quel est le rôle de l'ensemble de test ?**
+
+L'ensemble de test sert à :
+- **Évaluer les performances**
+- **Détecter le surapprentissage** (overfitting)
+- **Estimer la capacité de généralisation**
+- **Comparer différents modèles**
+
+**Choix du pourcentage (20%) :**
+
+Un pourcentage de 20% pour l'ensemble de test est un choix standard qui offre un bon équilibre :
+- Assez de données d'entraînement (80%) pour apprendre efficacement
+- Assez de données de test (20%) pour une évaluation fiable
+- Pour des datasets plus petits, on peut utiliser 30% de test
+- Pour des datasets très grands, 10% peut suffire
+
+```bash
+python exo2.py
+```
+
+### Exercice 3 - Modélisation par régression linéaire
+
+1. Créer un modèle de régression linéaire.
+2. Entraîner le modèle sur l'ensemble d'apprentissage.
+3. Afficher :
+• Les coefficients du modèle
+• L'ordonnée à l'origine (intercept)
+4. Interpréter :
+• Le rôle des coefficients
+• Le lien entre une variable explicative et la variable cible
+
+**Question 1 : Le rôle des coefficients**
+
+Les coefficients indiquent l'impact de chaque variable explicative sur la variable cible :
+- **Coefficient positif** : augmentation de la variable cible
+- **Coefficient négatif** : diminution de la variable cible
+- **Valeur absolue du coefficient** : mesure l'importance relative de la variable (plus la valeur absolue est grande, plus l'impact est important)
+
+L'**ordonnée à l'origine (intercept)** représente la valeur prédite de la variable cible lorsque toutes les variables explicatives sont égales à zéro.
+
+**Question 2 : Le lien entre une variable explicative et la variable cible**
+
+Dans une régression linéaire, la relation est **linéaire** et **additive** :
+- Chaque variable contribue indépendamment à la prédiction
+- Le coefficient indique de combien la variable cible change en moyenne lorsque la variable explicative augmente d'une unité, toutes les autres variables restant constantes
+
+```bash
+python exo3.py
+```
+### Exercice 4 - Prédiction
+
+1. Utiliser le modèle entraîné pour prédire les valeurs de la variable cible sur l'ensemble de test.
+2. Comparer :
+• Les valeurs réelles
+• Les valeurs prédites
+3. Donner un exemple d'interprétation d'une prédiction :
+• Que signifie une valeur prédite élevée ?
+• Que signifie une valeur prédite faible ?
+4. Expliquer pourquoi les prédictions ne sont pas limitées à 0 ou 1
+
+**Question 1 : Que signifie une valeur prédite élevée ?**
+
+Une valeur prédite élevée indique une **progression du diabète importante** pour le patient.
+
+**Question 2 : Que signifie une valeur prédite faible ?**
+
+Une valeur prédite faible indique une **progression du diabète limitée** pour le patient.
+
+**Question 3 : Pourquoi les prédictions ne sont pas limitées à 0 ou 1 ?**
+
+Les prédictions ne sont pas limitées à 0 ou 1 car :
+- C'est un problème de **régression**, pas de classification
+- La variable cible est **continue** : elle peut prendre n'importe quelle valeur numérique
+- Les valeurs 0 ou 1 sont caractéristiques de la **classification binaire**
+
+Dans ce dataset, les prédictions peuvent varier dans une plage continue, reflétant différents niveaux de progression du diabète.
+
+```bash
+python exo4.py
+```
+
+### Exercice 5 - Évaluation des performances
+
+1. Calculer les métriques de performance adaptées à un problème de régression :
+• Erreur quadratique moyenne (MSE)
+• Racine de l'erreur quadratique moyenne (RMSE)
+• Coefficient de détermination R²
+2. Expliquer le rôle de chaque métrique :
+• Que mesure le RMSE ?
+• Que signifie un R² proche de 1?
+3. Comparer les performances :
+• Sur l'ensemble d'entraînement
+• Sur l'ensemble de test
+4. Conclure sur la qualité du modèle et ses limites
+
+**Question 1 : Que mesure le RMSE ?**
+
+Le **RMSE (Root Mean Squared Error)** mesure l'erreur moyenne de prédiction en unités de la variable cible. Il représente l'écart-type des erreurs de prédiction. Plus le RMSE est faible, plus les prédictions sont précises. Le RMSE pénalise davantage les grandes erreurs que les petites erreurs grâce à la mise au carré des différences.
+
+**Question 2 : Que signifie un R² proche de 1 ?**
+
+Un **R² (coefficient de détermination) proche de 1** signifie que le modèle explique une grande partie de la variance des données. Plus précisément :
+- **R² = 1** : le modèle prédit parfaitement toutes les valeurs (aucune erreur)
+- **R² proche de 1** (ex: 0.9) : le modèle explique 90% de la variance, très bon modèle
+- **R² = 0** : le modèle ne fait pas mieux qu'une prédiction constante (moyenne)
+- **R² < 0** : le modèle est pire qu'une simple moyenne
+
+**Question 3 : Comparaison train vs test**
+
+En comparant les performances sur l'ensemble d'entraînement et de test, on peut détecter :
+- **Performances similaires** : bonne généralisation, le modèle n'a pas mémorisé les données
+- **Meilleure performance sur train** : possible surapprentissage (overfitting), le modèle a mémorisé plutôt qu'appris
+- **Meilleure performance sur test** : cas rare, possible sous-échantillonnage ou chance
+
+**Question 4 : Qualité du modèle et limites**
+
+**Qualité du modèle :**
+- Le R² autour de 0.45-0.53 indique que le modèle explique environ 45-53% de la variance
+- Le RMSE d'environ 54 unités représente l'erreur moyenne de prédiction
+- Les performances sont relativement similaires entre train et test, suggérant une généralisation correcte
+
+**Limites :**
+- **R² modéré** : le modèle n'explique qu'environ la moitié de la variance, d'autres facteurs non inclus influencent la progression du diabète
+- **Erreur importante** : RMSE de ~54 unités sur une moyenne de ~146, soit environ 37% d'erreur relative
+- **Modèle linéaire** : assume une relation linéaire, alors que les relations peuvent être non-linéaires
+- **Variables manquantes** : d'autres facteurs (génétiques, environnementaux, etc.) ne sont pas pris en compte
+
+```bash
+python exo5.py
+```
+
+## TP4 - Régression logistique
+
+### Exercice 1 - Découverte du dataset
+
+1. Charger le dataset Breast Cancer depuis Scikit-learn.
+2. Afficher :
+• le nombre d'échantillons
+• le nombre de variables explicatives
+3.Identifier :
+• la variable cible
+• les différentes classes
+4.Donner la signification d'un problème de classification binaire dans ce contexte.
+
+**Question 4 : Signification d'un problème de classification binaire**
+
+Classification de données en **deux classes mutuellement exclusives** :
+- **Classe 0 (malignant)** : tumeur cancéreuse
+- **Classe 1 (benign)** : tumeur non cancéreuse
+
+**Caractéristiques** : deux classes seulement, mutuellement exclusives. **Objectif** : prédire si une tumeur est maligne ou bénigne. **Différence avec régression** : prédit une classe (0/1) plutôt qu'une valeur continue.
+
+```bash
+python tp4_exo1.py
+```
+
+### Exercice 2 - Préparation des données
+
+1. Séparer les données en :
+• variables explicatives X
+• variable cible y
+2. Diviser le dataset en un ensemble :
+• d'entraînement (70 %)
+• de test (30 %)
+3. Expliquer pourquoi les données doivent être normalisées pour la régression logistique.
+
+**Question 3 : Pourquoi normaliser les données pour la régression logistique ?**
+
+Normalisation nécessaire car :
+- **Échelles différentes** : variables avec plages très différentes (0 à 4254)
+- **Convergence** : descente de gradient converge plus rapidement avec données normalisées
+- **Stabilité** : évite problèmes numériques lors du calcul des exponentielles
+- **Équité** : sans normalisation, variables à grande échelle dominent
+
+**Résultat** : Sans normalisation → 1000 itérations (non convergence). Avec normalisation → 19 itérations, meilleure précision.
+
+```bash
+python tp4_exo2.py
+```
+
+### Exercice 3 - Normalisation
+
+1. Appliquer une normalisation aux données d'entrée.
+2. Justifier le choix de la méthode de normalisation utilisée.
+3. Comparer les performances du modèle :
+• avec normalisation
+• sans normalisation
+
+**Question 2 : Justification du choix de StandardScaler**
+
+**StandardScaler** choisi car : moyenne=0, écart-type=1, préserve la forme de la distribution, adapté à la régression logistique, robuste aux valeurs aberrantes.
+
+**Question 3 : Comparaison avec/sans normalisation**
+
+**Résultats** : Sans normalisation → 94.15% accuracy, 1000 itérations. Avec normalisation → 98.83% accuracy, 19 itérations. **Avantages** : +4.68% accuracy, convergence 981x plus rapide, meilleure stabilité.
+
+```bash
+python tp4_exo3.py
+```
+
+### Exercice 4 - Entraînement du modèle
+
+1. Créer un modèle de régression logistique.
+2. Entraîner le modèle sur l'ensemble d'apprentissage.
+3. Expliquer le rôle de la fonction logistique (sigmoïde).
+
+**Question 3 : Rôle de la fonction logistique (sigmoïde)**
+
+La **sigmoïde** transforme une valeur linéaire en probabilité entre 0 et 1. **Formule** : σ(z) = 1 / (1 + e^(-z)). **Rôle** : convertit la combinaison linéaire des variables en probabilité, garantit une sortie [0,1], seuil généralement à 0.5 pour la décision. **Avantages** : interprétabilité, continuité (dérivable), stabilité.
+
+```bash
+python tp4_exo4.py
+```
+
+### Exercice 5 - Prédiction
+
+1. Utiliser le modèle entraîné pour prédire la classe des données de test.
+2. Donner la signification d'une prédiction égale à :
+• 0
+• 1
+
+**Question 2 : Signification des prédictions**
+
+**Prédiction = 0 (malignant)** : tumeur **MALIGNE** (cancéreuse), traitement urgent nécessaire. **Prédiction = 1 (benign)** : tumeur **BÉNIGNE** (non cancéreuse), surveillance régulière. **Probabilités** : proche de 1.0 = très confiant, proche de 0.5 = incertitude, proche de 0.0 = très confiant que ce n'est pas cette classe. **Contexte médical** : faux négatifs très graves (retardent traitement), faux positifs moins graves (examens supplémentaires).
+
+```bash
+python tp4_exo5.py
+```
+
+### Exercice 6 - Évaluation des performances
+
+1. Calculer l'accuracy du modèle.
+2. Afficher la matrice de confusion.
+3. Calculer :
+• la précision
+• le rappel
+• le F1-score
+4. Interpréter les résultats obtenus.
+
+**Question 4 : Interprétation des résultats**
+
+**Accuracy (98.83%)** : excellent, prédit correctement près de 99% des cas. **Précision** : Malignant 98.44%, Benign 99.07%. **Rappel** : Malignant 98.44% (détecte presque tous les cancers), Benign 99.07%. **F1-score** : 98.44% (malignant), 99.07% (benign) - excellent équilibre. **Conclusion** : performances excellentes avec bon équilibre précision/rappel.
+
+```bash
+python tp4_exo6.py
+```
+
+### Exercice 7 - Analyse des erreurs
+
+1. Identifier :
+• les faux positifs
+• les faux négatifs
+2. Expliquer pourquoi certaines erreurs peuvent être plus graves que d'autres dans ce contexte médical.
+3. Proposer une métrique plus pertinente que l'accuracy
+
+**Question 2 : Gravité des erreurs dans le contexte médical**
+
+**Faux négatifs (malignant → benign) PLUS GRAVES** : retardent diagnostic, empêchent traitement précoce, risque vital, conséquences irréversibles. **Faux positifs (benign → malignant) MOINS GRAVES** : anxiété temporaire, examens supplémentaires confirmeront diagnostic, coût gérable. **Conclusion** : faux négatifs beaucoup plus graves (conséquences mortelles).
+
+**Question 3 : Métrique plus pertinente que l'accuracy**
+
+**Le RAPPEL (Recall)** est plus pertinent car : formule TP/(TP+FN), mesure capacité à détecter TOUS les cancers, priorité médicale (mieux vaut détecter tous les cancers), faux négatif plus grave qu'un faux positif. **Autres métriques** : F1-score, Spécificité, AUC-ROC. **Dans ce modèle** : rappel 98.44% pour 'malignant' → détecte presque tous les cancers (objectif principal).
+
+```bash
+python tp4_exo7.py
+```
+
+## TP5 - k plus proches voisins
+
+**Dataset:** Titanic - Passenger Survival  
+**Fichiers fournis :** train.csv, test.csv, gender_submission.csv
+
+**Variables explicatives (exemples) :**
+- Pclass : classe du billet (1, 2, 3)
+- Sex: sexe du passager
+- Age: âge
+- Fare : prix du billet
+- SibSp: nombre de frères/soeurs ou conjoints
+- Parch: nombre de parents/enfants
+
+**Variable cible (target) :**
+- Survived
+  - 0: non survivant
+  - 1: survivant
+
+**Note :** Dataset réel → présence de valeurs manquantes et variables catégorielles.
+
+### Exercice 1 - Chargement et exploration des données
+
+1. Charger le fichier train.csv.
+2. Afficher les premières lignes du dataset.
+3. Identifier :
+• les variables explicatives
+• la variable cible
+4. Donner le nombre d'observations et de variables.
+5. Identifier les variables numériques et catégorielles.
+
+```bash
+python tp5_exo1.py
+```
+
+### Exercice 2 - Analyse exploratoire
+
+1. Étudier la répartition des survivants et des non-survivants.
+2. Analyser l'influence de certaines variables sur la survie :
+• sexe
+• classe
+• âge
+3. Formuler des hypothèses à partir des observations.
+
+**Résultats observés :**
+
+**Répartition globale :** 61.62% non-survivants, 38.38% survivants.
+
+**Influence du SEXE :** Femmes 74.20% de survie vs Hommes 18.89% → différence majeure.
+
+**Influence de la CLASSE :** Classe 1 (62.96%) > Classe 2 (47.28%) > Classe 3 (24.24%) → classe sociale importante.
+
+**Influence de l'ÂGE :** Enfants (57.97%) ont meilleur taux de survie que seniors (22.73%).
+
+**Hypothèses formulées :**
+
+**Hypothèse 1 - Influence du SEXE :**
+- Les femmes ont un taux de survie beaucoup plus élevé (74.20%) que les hommes (18.89%)
+- **Hypothèse** : "Les femmes et les enfants d'abord" était appliqué lors de l'évacuation
+
+**Hypothèse 2 - Influence de la CLASSE :**
+- La classe 1 a un taux de survie beaucoup plus élevé (62.96%) que la classe 3 (24.24%)
+- **Hypothèse** : Les passagers de première classe avaient un meilleur accès aux canots de sauvetage
+
+**Hypothèse 3 - Influence de l'ÂGE :**
+- Les enfants ont un taux de survie élevé (57.97%)
+- **Hypothèse** : Priorité donnée aux enfants lors de l'évacuation
+
+**Hypothèse 4 - Combinaison de facteurs :**
+- Les femmes de première classe ont le meilleur taux de survie (96.81%)
+- Les hommes de troisième classe ont le pire taux de survie (13.54%)
+- **Hypothèse** : La survie dépend de plusieurs facteurs combinés (sexe + classe + âge)
+
+```bash
+python tp5_exo2.py
+```
+
+### Exercice 5 - Normalisation des données
+
+1. Appliquer une normalisation aux variables explicatives.
+2. Expliquer pourquoi la normalisation est cruciale pour l'algorithme k-NN.
+3. Comparer les performances avec et sans normalisation.
+
+**Question 2 : Pourquoi la normalisation est cruciale pour k-NN**
+
+**k-NN utilise la DISTANCE** entre points pour classer. **Sans normalisation** : variables à grande échelle (ex: Fare 0-500) dominent le calcul de distance vs variables à petite échelle (ex: Pclass 1-3). **Avec normalisation** : toutes les variables contribuent équitablement. **Résultat** : amélioration significative des performances (+13.97% d'accuracy observé).
+
+**Question 3 : Comparaison avec/sans normalisation**
+
+**Résultats observés** : Sans normalisation → 67.04% accuracy. Avec normalisation → 81.01% accuracy. **Amélioration** : +13.97%. **Conclusion** : normalisation essentielle car k-NN se base sur les distances.
+
+```bash
+python tp5_exo5.py
+```
+
+### Exercice 6 - Mise en place du modèle k-NN
+
+1. Créer un modèle k-NN avec une valeur initiale de k.
+2. Entraîner le modèle sur l'ensemble d'apprentissage.
+3. Expliquer le principe de fonctionnement de l'algorithme.
+
+**Question 3 : Principe de fonctionnement de k-NN**
+
+**Étape 1 - Calcul des distances** : Pour chaque point de test, calculer distance euclidienne avec tous les points d'entraînement. **Étape 2 - Sélection des k voisins** : Identifier les k points les plus proches. **Étape 3 - Vote majoritaire** : Attribuer la classe la plus fréquente parmi les k voisins.
+
+**Caractéristiques** : Algorithme non paramétrique, apprentissage paresseux (lazy), stocke tous les points en mémoire. **Avantages** : simple, efficace pour petits datasets. **Inconvénients** : coûteux pour grands datasets, nécessite normalisation.
+
+```bash
+python tp5_exo6.py
+```
+
+### Exercice 7 - Prédiction et évaluation
+
+1. Prédire la survie des passagers de l'ensemble de test.
+2. Calculer :
+• l'accuracy
+• la matrice de confusion
+3. Interpréter les résultats obtenus.
+
+**Question 3 : Interprétation des résultats**
+
+**Performance globale** : Accuracy de 81.01% → modèle prédit correctement la survie pour 145 passagers sur 179.
+
+**Matrice de confusion** :
+- **97 non-survivants** correctement identifiés (sur 110) - 88.18%
+- **48 survivants** correctement identifiés (sur 69) - 69.57%
+- **34 erreurs** au total (13 faux positifs, 21 faux négatifs)
+
+**Interprétation** :
+- **Faux positifs (13)** : non-survivants prédits comme survivants → surestimation
+- **Faux négatifs (21)** : survivants prédits comme non-survivants → sous-estimation
+- **Précision (78.69%)** : parmi les prédictions "survivant", 78.69% sont correctes
+- **Rappel (69.57%)** : le modèle détecte 69.57% de tous les vrais survivants
+
+**Conclusion** : Performance excellente (≥80%), modèle équilibré entre précision et rappel. Le modèle k-NN avec k=5 et normalisation donne de bons résultats pour ce problème.
+
+```bash
+python tp5_exo7.py
+```
+
+### Exercice 7 BIS - Comparaison k-NN vs Random Forest
+
+1. Créer un modèle Random Forest.
+2. Comparer les performances avec le modèle k-NN.
+3. Analyser les avantages et inconvénients de chaque modèle.
+
+**Résultats de la comparaison :**
+
+**Performances identiques** : Les deux modèles obtiennent 81.01% d'accuracy, 78.69% de précision, 69.57% de rappel et 73.85% de F1-score.
+
+**Note importante** : Les performances identiques sont une **coïncidence statistique**. Les deux modèles font exactement le même nombre d'erreurs (34 sur 179), mais se trompent sur des cas différents. Sur 14 prédictions, les modèles diffèrent, mais le nombre total d'erreurs reste identique. C'est rare mais possible, surtout avec un petit dataset.
+
+**Importance des variables (Random Forest)** :
+- Sex_encoded : 30.03% (variable la plus importante)
+- Fare : 24.77%
+- Age : 21.12%
+
+**Avantages k-NN** : Simple, pas d'entraînement complexe, efficace pour petits datasets. **Inconvénients** : nécessite normalisation, coûteux pour grands datasets.
+
+**Avantages Random Forest** : Moins sensible au bruit, fournit importance des variables, pas besoin de normalisation. **Inconvénients** : plus complexe, peut surajuster.
+
+**Conclusion** : Les deux modèles obtiennent des performances identiques (81.01% accuracy). Random Forest offre l'avantage de l'importance des variables (Sex_encoded 30%, Fare 25%, Age 21%) pour l'interprétation. k-NN est plus simple à comprendre et implémenter.
+
+```bash
+python tp5_exo7bis.py
+```
